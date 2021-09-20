@@ -106,6 +106,32 @@ async function main(){
             'foodRecord':foodRecord
         })
     })
+
+    app.post('/food_record/:food_record_id/edit', async function(req,res){
+        let db = MongoUtil.getDB();
+        let { foodRecordName, calories, tags} = req.body;
+         // normalize the tags 
+        // 1. if tags is undefined, normalize to empty array
+        tags = tags || [];
+        // 2. if tags is a string (i.e not an array), normalize to an array with that string as its only element
+        if (Array.isArray(tags) == false) {
+            tags = [ tags ];
+        }
+
+        await db.collection('food_records').updateOne({
+            '_id':ObjectId(req.params.food_record_id)
+        },{
+            '$set':{
+                // 'foodRecordName': foodRecordName,
+                // 'calories': calories,
+                // 'tags':tags
+                foodRecordName, calories, tags
+            }
+        })
+
+        res.redirect('/food_records')
+
+    })
 }
 
 main();
