@@ -74,6 +74,17 @@ async function main(){
         res.send("Add new food ok")
         
     })
+
+    app.get("/food_records", async function(req, res){
+        let db = MongoUtil.getDB();
+        let records = await db.collection('food_records')
+                              .find()
+                              .toArray();
+
+        res.render('food_records', {
+            'records': records
+        })
+    })
 }
 
 main();
