@@ -9,7 +9,7 @@ async function connect() {
     // use the db function to connect to a database server
     let db = client.db("sample_airbnb");
     // have to use the collection function
-    let records = await db.collection('listingsAndReviews').find({}).limit(10).toArray();
+    // let records = await db.collection('listingsAndReviews').find({}).limit(10).toArray();
     // let collection = db.collection('listingsAndReviews');
     // let results = await collection.find({}).limit(10);
     // let records= await results.toArray();
