@@ -3,6 +3,8 @@ const hbs = require('hbs');
 const { Db } = require('mongodb');
 const wax = require('wax-on')
 const MongoUtil = require('./MongoUtil')
+// import in ObjectId function from the mongodb package
+const ObjectId = require('mongodb').ObjectId;
 
 // setup dotenv library
 // const dotenv = require('dotenv');
@@ -24,6 +26,11 @@ app.use(express.static('public'));
 // enable template inheritance
 wax.on(hbs.handlebars);
 wax.setLayoutPath('./views/layouts');
+
+// setup handlebars-heleprs
+const heleprs = require('handlebars-helpers')({
+    "handlebars": hbs.handlebars
+})
 
 // enable forms
 app.use(express.urlencoded({extended: false}));
@@ -83,6 +90,20 @@ async function main(){
 
         res.render('food_records', {
             'records': records
+        })
+    })
+
+    // display the form that allows the user to edit the food record
+    app.get('/food_record/:food_record_id/edit', async function(req, res){
+        let db = MongoUtil.getDB();
+        // use findOne  when we expect only one result
+        // use find when we expect an array of results (have to remember to use toArray())
+        let foodRecord = await db.collection('food_records')
+                                            .findOne({
+                                                "_id":ObjectId(req.params.food_record_id)
+                                            })
+        res.render('edit_food_record',{
+            'foodRecord':foodRecord
         })
     })
 }
