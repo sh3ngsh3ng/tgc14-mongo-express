@@ -5,7 +5,7 @@ let _db;
 
 async function connect(uri, dbname) {
     const client = new MongoClient(uri, {
-        useUnifiedToplogy: true,
+        useUnifiedTopology: true,
         useNewUrlParser: true
     })
     await client.connect();
