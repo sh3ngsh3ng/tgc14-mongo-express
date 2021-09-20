@@ -37,7 +37,7 @@ app.use(express.urlencoded({extended: false}));
 
 // ROUTES
 async function main(){
-    await MongoUtil.connect(process.env.MONGO_URI, "tgc14_cico");
+    await MongoUtil.connect("mongodb+srv://root:chickenrice123@cluster0.slqev.mongodb.net/?retryWrites=true&w=majority", "tgc14_cico");
 
 
     app.get('/', async function(req,res){
@@ -132,10 +132,30 @@ async function main(){
         res.redirect('/food_records')
 
     })
+
+    // delete route
+    app.get('/food_record/:food_record_id/delete', async function(req, res) {
+        let db = MongoUtil.getDB()
+        let foodRecord = await db.collection('food_records')
+                                .findOne({
+                                    '_id': ObjectId(req.params.food_record_id)
+                                })
+        res.render('delete_food_records', {
+            foodRecord
+        })
+    })
+
+    app.get('/food_record/:food_record_id/delete', async function(req,res) {
+        let db = MongoUtil.getDB()
+        await db.collections.deleteOne({
+            '_id': ObjectId(req.params.food_record_id)
+        })
+        res.redirect('/food_records')
+    })
 }
 
 main();
 
-app.listen(3000, function(){
+app.listen(2000, function(){
     console.log("Server has started")
 });
